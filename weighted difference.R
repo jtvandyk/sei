@@ -11,3 +11,6 @@ con <- dbConnect(drv,
                  user = "ebadmin",
                  password = "Edbuild2014"
 )
+
+# Close PostgreSQL connection 
+dbDisconnect(con)
