@@ -12,8 +12,8 @@ SELECT "sei"."master"."GID",
 "sei"."master"."year",
 "sei"."master"."geom"
 --Type in the two character state code for the creation of the relevant table
-INTO "sei"."<StateFP>"
+INTO "sei"."<dStatePost>"
 FROM "sei"."master"
 --Copy the state character code used in above here
-WHERE "sei"."master"."dStateFP" = '--<dStateFP>'
-ORDERED BY "sei"."master"."dName"
+WHERE "sei"."master"."dStateFP" = '<dStateFP>'
+ORDER BY "sei"."master"."dName"
