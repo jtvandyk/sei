@@ -77,22 +77,22 @@ plot(NJ.sp)
 
 #Create neighbors list for SpatialPolygonsDataFrame (spdep)
 NJ.nb <- poly2nb(NJ.sp,  row.names= NJ.sp$dNCESID, queen = FALSE)
-dbWriteTable(con, c("sei", "NJ.nb"), NJ.nb, row.names=FALSE)
+# dbWriteTable(con, c("sei", "NJ.nb"), NJ.nb, row.names=FALSE)
 
 #Create weights for nb class neighbors list (spdep)
 NJ.lw <- nb2listw(NJ.nb)
-dbWriteTable(con, c("sei","NJ.lw"), NJ.lw, row.names=FALSE)
+# dbWriteTable(con, c("sei","NJ.lw"), NJ.lw, row.names=FALSE)
 
 #Build adjacency table (spdep)
 NJ.adj <- nb2mat(NJ.nb, style = 'B')
-dbWriteTable(con, c("sei", "NJ.adj"), NJ.adj, row.names=FALSE)
+# dbWriteTable(con, c("sei", "NJ.adj"), NJ.adj, row.names=FALSE)
 
 #Build adjacency matrix table (igraph)
 NJ.e <- graph.adjacency(NJ.adj, mode="undirected")
 
 #Transform to edgelist table (igraph)
 NJ.edge <- get.edgelist(NJ.e, names=TRUE)
-dbWriteTable(con, c("sei", "NJ.edge"), NJ.edge, row.names=FALSE)
+# dbWriteTable(con, c("sei", "NJ.edge"), NJ.edge, row.names=FALSE)
 
 # Close PostgreSQL connection 
 dbDisconnect(con)
