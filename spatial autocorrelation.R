@@ -1,6 +1,8 @@
 #Required Packages
 require(RPostgreSQL)
+require(rgdal)
 require(rgeos)
+require(sp)
 
 ## loads the PostgreSQL driver
 drv <- dbDriver("PostgreSQL")
@@ -15,15 +17,7 @@ con <- dbConnect(drv,
 )
 
 #Read table from database into R data frame
-nj <- dbReadTable(con, c("sei","NJ"))
-
-#Verify that state$geom is present
-str(nj)
-
-#Translate data frame into SP class object(SpatialPolygons, SPatialPoints, or SpatialLines)
-#with readWKT function in rgeos
-
-
+nj <- dbReadTable(con, c("sei","test2"))
 
 # Close PostgreSQL connection 
 dbDisconnect(con)
