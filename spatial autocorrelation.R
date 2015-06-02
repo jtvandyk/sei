@@ -28,7 +28,7 @@ con <- dbConnect(drv,
 
 # Import relevant data table for state
 # Read table into R data frame
-nj <- dbReadTable(con, c("sei","test2"))
+NJ <- dbReadTable(con, c("sei","test2"))
 
 #Reset row names
 row.names(NJ) = NJ$dNCESID
@@ -65,6 +65,10 @@ plot(NJ.sp)
 #Write new spatial class to database
 #Create array to indicate schema, table where c("schema","table")
 dbWriteTable(con, c("sei","NJ.sp"), NJ.sp, row.names=FALSE) 
+
+# Test: R code assumes library(rgdal)
+# writeOGR(NJ.sp, "PG:dbname='eb1' user=ebadmin password="Edbuild2014" host='edbuild1.c85mgedxi7oy.us-east-1.rds.amazonaws.com' port='5432' ", layer_options = "geometry_name=geom", 
+         "njdataframetest", "PostgreSQL")
 
 # dbWriteTable variants:
 #   overwrite=TRUE : *replaces* table
