@@ -1,4 +1,8 @@
+#Required Packages
 require(RPostgreSQL)
+require(rgdal)
+require(rgeos)
+require(sp)
 
 ## loads the PostgreSQL driver
 drv <- dbDriver("PostgreSQL")
@@ -11,6 +15,9 @@ con <- dbConnect(drv,
                  user = "ebadmin",
                  password = "Edbuild2014"
 )
+
+#Read table from database into R data frame
+nj <- dbReadTable(con, c("sei","test2"))
 
 # Close PostgreSQL connection 
 dbDisconnect(con)
