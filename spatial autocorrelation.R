@@ -1,4 +1,12 @@
-#Required Packages
+# INSTRUCTIONS
+# Run through the following code step by step. In some cases the code creates
+# output that will need to be returned to the database. In other cases the output 
+# is a form of analysis which will be used to construct the next table. 
+
+#####################
+#System Requirements#
+#####################
+#Load required packages
 require(RPostgreSQL)
 require(rgeos)
 require(rgdal)
@@ -6,10 +14,10 @@ require(sp)
 require(spdep)
 require(igraph)
 
-## loads the PostgreSQL driver
+# Load PostgreSQL Driver
 drv <- dbDriver("PostgreSQL")
 
-## Open a connection
+## Open a PostgreSQL Connection
 con <- dbConnect(drv, 
                  dbname="eb1",
                  host = "edbuild1.c85mgedxi7oy.us-east-1.rds.amazonaws.com",
@@ -18,7 +26,8 @@ con <- dbConnect(drv,
                  password = "Edbuild2014"
 )
 
-#Read table from database into R data frame
+# Import relevant data table for state
+# Read table into R data frame
 nj <- dbReadTable(con, c("sei","test2"))
 
 #Reset row names
@@ -26,11 +35,11 @@ row.names(NJ) = NJ$dNCESID
 
 # Create spatial polygons
 # To set the PROJ4 string, enter the EPSG SRID and uncomment the 
-# following two lines: SRID set to WGS84
+# following two lines: SRID set to WGS84/4326
 EPSG = make_EPSG()
 p4s = EPSG[which(EPSG$code == 4326), "prj4"]
 
-#For loop to iterate through each row in table loaded above. 
+#For loop to iterate through each row in state table loaded above. 
 #Creates sp class SpatialPolygonsDataFrame titled 'spTemp'
 for (i in seq(nrow(NJ))) {
   if (i == 1) {
@@ -54,7 +63,7 @@ NJ.sp <- SpatialPolygonsDataFrame(spTemp, NJ[-2])
 plot(NJ.sp)
 
 #Write new spatial class to database
-#Create array to indicate schema, table
+#Create array to indicate schema, table where c("schema","table")
 dbWriteTable(con, c("sei","NJ.sp"), NJ.sp, row.names=FALSE) 
 
 # dbWriteTable variants:
@@ -62,7 +71,7 @@ dbWriteTable(con, c("sei","NJ.sp"), NJ.sp, row.names=FALSE)
 #   append=TRUE    : inserts new rows
 # (default is that both are FALSE; can't have both TRUE)
 
-#Plot neighbors (spdep)
+#Create neighbors list for SpatialPolygonsDataFrame (spdep)
 NJ.nb <- poly2nb(NJ.sp,  row.names= NJ.sp$dNCESID, queen = FALSE)
 dbWriteTable(con, c("sei", "NJ.nb"), NJ.nb, row.names=FALSE)
 
