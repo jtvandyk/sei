@@ -1,8 +1,10 @@
 #Required Packages
 require(RPostgreSQL)
-require(rgdal)
 require(rgeos)
+require(rgdal)
 require(sp)
+require(spdep)
+require(igraph)
 
 ## loads the PostgreSQL driver
 drv <- dbDriver("PostgreSQL")
