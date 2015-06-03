@@ -112,7 +112,7 @@ NJ.dfedge$ID <- 1:nrow(NJ.dfedge)
 
 # Subset source and target nodes to join poverty rate data
 NJ.source <- NJ.dfedge[c(1,3)]
-NJ.target <- NJ.edge[c(2,3)]
+NJ.target <- NJ.dfedge[c(2,3)]
 
 # Convert to data frame to join poverty rate
 # NJ.source <- data.frame(NJ.source)
