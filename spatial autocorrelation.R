@@ -77,13 +77,11 @@ plot(NJ.sp)
 
 #Create neighbors list for SpatialPolygonsDataFrame (spdep)
 NJ.nb <- poly2nb(NJ.sp,  row.names= NJ.sp$dNCESID, queen = FALSE)
-# dbWriteTable(con, c("sei", "NJ.nb"), NJ.nb, row.names=FALSE)
 
 plot(NJ.nb)
 
 #Create weights for nb class neighbors list (spdep)
 NJ.lw <- nb2listw(NJ.nb)
-# dbWriteTable(con, c("sei","NJ.lw"), NJ.lw, row.names=FALSE)
 
 #Build adjacency table (spdep)
 #Transition NB list/class to NB list weights
