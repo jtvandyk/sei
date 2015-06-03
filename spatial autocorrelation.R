@@ -66,10 +66,6 @@ plot(NJ.sp)
 # Create array to indicate schema, table where c("schema","table")
 # dbWriteTable(con, c("sei","NJ.sp"), NJ.sp, row.names=FALSE) 
 
-# Test: R code assumes library(rgdal)
-# writeOGR(NJ.sp, "PG:dbname='eb1' user=ebadmin password="Edbuild2014" host='edbuild1.c85mgedxi7oy.us-east-1.rds.amazonaws.com' port='5432' ", layer_options = "geometry_name=geom", 
-         "njdataframetest", "PostgreSQL")
-
 # dbWriteTable variants:
 #   overwrite=TRUE : *replaces* table
 #   append=TRUE    : inserts new rows
