@@ -105,17 +105,22 @@ names(NJ.edge) <- c("Source","Target")
 #Create Edge Weights#
 #####################
 
+# Create data frame from edgelist
+NJ.dfedge <- data.frame(NJ.edge)
+names(NJ.dfedge) <- c("Source", "Target")
+NJ.dfedge$ID <- 1:nrow(NJ.dfedge)
+
 # Subset source and target nodes to join poverty rate data
-NJ.source <- NJ.edge[,1]
-NJ.target <- NJ.edge[,2]
+NJ.source <- NJ.dfedge[c(1,3)]
+NJ.target <- NJ.edge[c(2,3)]
 
 # Convert to data frame to join poverty rate
-NJ.source <- data.frame(NJ.source)
-NJ.target <- data.frame(NJ.target)
+# NJ.source <- data.frame(NJ.source)
+# NJ.target <- data.frame(NJ.target)
 
 # Rename columns
-names(NJ.source) <- c("Source")
-names(NJ.target) <- c("Target")
+# names(NJ.source) <- c("Source")
+# names(NJ.target) <- c("Target")
 
 # Subset from data table
 subsetVars <- c("dNCESID","dEstPovRate")
