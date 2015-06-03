@@ -26,6 +26,10 @@ con <- dbConnect(drv,
                  password = "Edbuild2014"
 )
 
+###############
+#Create Tables#
+###############
+
 # Import relevant data table for state
 # Read table into R data frame
 NJ <- dbReadTable(con, c("sei","test2"))
