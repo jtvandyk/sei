@@ -75,36 +75,59 @@ plot(NJ.sp)
 #   append=TRUE    : inserts new rows
 # (default is that both are FALSE; can't have both TRUE)
 
-#Create neighbors list for SpatialPolygonsDataFrame (spdep)
+# Create neighbors list for SpatialPolygonsDataFrame (spdep)
 NJ.nb <- poly2nb(NJ.sp,  row.names= NJ.sp$dNCESID, queen = FALSE)
 
 summary(NJ.nb)
 plot(NJ.nb)
 
-#Create weights for nb class neighbors list (spdep)
+# Create weights for nb class neighbors list (spdep)
 NJ.lw <- nb2listw(NJ.nb)
 
-#Build adjacency table (spdep)
-#Transition NB list/class to NB list weights
-#Creates nb class weights list titled 'nbTemp'
+# Build adjacency table (spdep)
+# Transition NB list/class to NB list weights
+# Creates nb class weights list titled 'nbTemp'
 nbTemp <- as(nb2listw(NJ.nb, style="B", zero.policy=TRUE), "CsparseMatrix")
 
-#Build adjacency matrix table (igraph)
-#Transition NB list weights to adjacency graph
+# Build adjacency matrix table (igraph)
+# Transition NB list weights to adjacency graph
 NJ.adj <- graph.adjacency(nbTemp, mode="undirected")
 
-#Test matrix graph
+# Test matrix graph
 plot(NJ.adj)
 
-#Transform to edgelist table (igraph)
-#Create edge list with District NCES ID from adjacency graph
+# Transform to edgelist table (igraph)
+# Create edge list with District NCES ID from adjacency graph
 NJ.edge <- get.edgelist(NJ.adj, names=TRUE)
+names(NJ.edge) <- c("Source","Target")
 
-#Subset source and target nodes to join poverty rate data
+#####################
+#Create Edge Weights#
+#####################
+
+# Subset source and target nodes to join poverty rate data
 NJ.source <- NJ.edge[,1]
 NJ.target <- NJ.edge[,2]
 
+# Convert to data frame to join poverty rate
+NJ.source <- data.frame(NJ.source)
+NJ.target <- data.frame(NJ.target)
 
+# Rename columns
+names(NJ.source) <- c("Source")
+names(NJ.target) <- c("Target")
+
+# Subset from data table
+subsetVars <- c("dNCESID","dEstPovRate")
+NJ.pov <- NJ.data[subsetVars]
+
+# Merge poverty data with Source and Target nodes tables
+NJ.sourceData <- merge(NJ.source, NJ.pov, by.x = "Source", by.y="dNCESID")
+NJ.targetData <- merge(NJ.target, NJ.pov, by.x = "Target", by.y="dNCESID")
+
+###########################
+#Close Database Connection#
+###########################
 
 # Close PostgreSQL connection 
 dbDisconnect(con)
