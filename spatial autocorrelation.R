@@ -85,11 +85,12 @@ NJ.lw <- nb2listw(NJ.nb)
 
 #Build adjacency table (spdep)
 #Transition NB list/class to NB list weights
-B <- as(nb2listw(NJ.nb, style="B", zero.policy=TRUE), "CsparseMatrix")
+#Creates nb class weights list titled 'nbTemp'
+nbTemp <- as(nb2listw(NJ.nb, style="B", zero.policy=TRUE), "CsparseMatrix")
 
 #Build adjacency matrix table (igraph)
 #Transition NB list weights to adjacency graph
-NJ.adj <- graph.adjacency(B, mode="undirected")
+NJ.adj <- graph.adjacency(nbTemp, mode="undirected")
 
 #Test matrix graph
 plot(NJ.adj)
