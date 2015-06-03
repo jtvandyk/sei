@@ -142,6 +142,9 @@ NJ.edgew <- NJ.edgeanalysis[weightVars]
 # Convert to weighted edge list
 NJ.edgeW <- graph.data.frame(NJ.edgew)
 
+# Convert to weighted adjacency matrix
+NJ.adjW <- get.adjacency(NJ.edgeW, attr='Weight')
+
 ###########################
 #Close Database Connection#
 ###########################
