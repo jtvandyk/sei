@@ -1,6 +1,6 @@
 # INSTRUCTIONS
 # Run through the following code step by step. In some cases the code creates
-# output that will need to be returned to the database. In other cases the output 
+# an output that will need to be returned to the database. In other cases the output 
 # is a form of analysis which will be used to construct the next table. 
 
 #####################
