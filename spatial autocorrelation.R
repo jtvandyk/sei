@@ -100,5 +100,11 @@ plot(NJ.adj)
 #Create edge list with District NCES ID from adjacency graph
 NJ.edge <- get.edgelist(NJ.adj, names=TRUE)
 
+#Subset source and target nodes to join poverty rate data
+NJ.source <- NJ.edge[,1]
+NJ.target <- NJ.edge[,2]
+
+
+
 # Close PostgreSQL connection 
 dbDisconnect(con)
