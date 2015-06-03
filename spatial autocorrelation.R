@@ -84,15 +84,19 @@ NJ.lw <- nb2listw(NJ.nb)
 # dbWriteTable(con, c("sei","NJ.lw"), NJ.lw, row.names=FALSE)
 
 #Build adjacency table (spdep)
-NJ.adj <- nb2mat(NJ.nb, style = 'B')
-# dbWriteTable(con, c("sei", "NJ.adj"), NJ.adj, row.names=FALSE)
+#Transition NB list/class to NB list weights
+B <- as(nb2listw(NJ.nb, style="B", zero.policy=TRUE), "CsparseMatrix")
 
 #Build adjacency matrix table (igraph)
-NJ.e <- graph.adjacency(NJ.adj, mode="undirected")
+#Transition NB list weights to adjacency graph
+NJ.testmatrix <- graph.adjacency(B, mode="undirected")
+
+#Test matrix graph
+plot(NJ.testmatrix)
 
 #Transform to edgelist table (igraph)
-NJ.edge <- get.edgelist(NJ.e, names=TRUE)
-# dbWriteTable(con, c("sei", "NJ.edge"), NJ.edge, row.names=FALSE)
+#Create edge list with District NCES ID from adjacency graph
+NJ.testedge <- get.edgelist(NJ.testmatrix, names=TRUE)
 
 # Close PostgreSQL connection 
 dbDisconnect(con)
