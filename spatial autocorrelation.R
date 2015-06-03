@@ -78,6 +78,7 @@ plot(NJ.sp)
 #Create neighbors list for SpatialPolygonsDataFrame (spdep)
 NJ.nb <- poly2nb(NJ.sp,  row.names= NJ.sp$dNCESID, queen = FALSE)
 
+summary(NJ.nb)
 plot(NJ.nb)
 
 #Create weights for nb class neighbors list (spdep)
