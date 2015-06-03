@@ -33,6 +33,7 @@ con <- dbConnect(drv,
 # Import relevant data table for state
 # Read table into R data frame
 NJ <- dbReadTable(con, c("sei","test2"))
+NJ.data <- dbReadTable(con, c("sei","NJ"))
 
 #Reset row names
 row.names(NJ) = NJ$dNCESID
