@@ -129,6 +129,7 @@ NJ.pov <- NJ.data[subsetVars]
 # Merge poverty data with Source and Target nodes tables
 NJ.sourceData <- merge(NJ.source, NJ.pov, by.x = "Source", by.y="dNCESID")
 NJ.targetData <- merge(NJ.target, NJ.pov, by.x = "Target", by.y="dNCESID")
+NJ.edgeanalysis <- merge(NJ.sourceData, NJ.targetData, by="ID")
 
 ###########################
 #Close Database Connection#
