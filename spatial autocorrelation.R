@@ -130,7 +130,8 @@ NJ.pov <- NJ.data[subsetVars]
 NJ.sourceData <- merge(NJ.source, NJ.pov, by.x = "Source", by.y="dNCESID")
 NJ.targetData <- merge(NJ.target, NJ.pov, by.x = "Target", by.y="dNCESID")
 NJ.edgeanalysis <- merge(NJ.sourceData, NJ.targetData, by="ID")
-
+names(NJ.edgeanalysis) <- c("ID","Source","sourcePov","Target","targetPov")
+NJ.edgeanalysis$Weight <- abs()
 ###########################
 #Close Database Connection#
 ###########################
