@@ -133,7 +133,7 @@ NJ.edgeanalysis <- merge(NJ.sourceData, NJ.targetData, by="ID")
 names(NJ.edgeanalysis) <- c("ID","Source","sourcePov","Target","targetPov")
 
 # Absolute value in difference between Source and Target nodes
-NJ.edgeanalysis$Weight <- abs(sourcePov-targetPov)
+NJ.edgeanalysis$Weight <- abs(NJ.edgeanalysis$sourcePov-NJ.edgeanalysis$targetPov)
 
 ###########################
 #Close Database Connection#
