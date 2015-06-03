@@ -30,10 +30,9 @@ con <- dbConnect(drv,
 #Create Tables#
 ###############
 
-# Import relevant data table for state
-# Read table into R data frame
-NJ <- dbReadTable(con, c("sei","test2"))
-NJ.data <- dbReadTable(con, c("sei","NJ"))
+# Import relevant data tables for state
+NJ <- dbReadTable(con, c("sei","test2"))    # Geospatial Table
+NJ.data <- dbReadTable(con, c("sei","NJ"))  # Data Table
 
 #Reset row names
 row.names(NJ) = NJ$dNCESID
