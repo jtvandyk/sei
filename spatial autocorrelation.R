@@ -135,6 +135,10 @@ names(NJ.edgeanalysis) <- c("ID","Source","sourcePov","Target","targetPov")
 # Absolute value in difference between Source and Target nodes
 NJ.edgeanalysis$Weight <- abs(NJ.edgeanalysis$sourcePov-NJ.edgeanalysis$targetPov)
 
+# Subset edgeweight analysis table to new data frame for conversion
+weightVars <- c("Source","Target","Weight")
+NJ.edgew <- NJ.edgeanalysis[weightVars]
+
 ###########################
 #Close Database Connection#
 ###########################
