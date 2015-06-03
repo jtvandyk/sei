@@ -89,14 +89,14 @@ B <- as(nb2listw(NJ.nb, style="B", zero.policy=TRUE), "CsparseMatrix")
 
 #Build adjacency matrix table (igraph)
 #Transition NB list weights to adjacency graph
-NJ.testmatrix <- graph.adjacency(B, mode="undirected")
+NJ.adj <- graph.adjacency(B, mode="undirected")
 
 #Test matrix graph
-plot(NJ.testmatrix)
+plot(NJ.adj)
 
 #Transform to edgelist table (igraph)
 #Create edge list with District NCES ID from adjacency graph
-NJ.testedge <- get.edgelist(NJ.testmatrix, names=TRUE)
+NJ.edge <- get.edgelist(NJ.adj, names=TRUE)
 
 # Close PostgreSQL connection 
 dbDisconnect(con)
