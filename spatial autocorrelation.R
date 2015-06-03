@@ -139,6 +139,9 @@ NJ.edgeanalysis$Weight <- abs(NJ.edgeanalysis$sourcePov-NJ.edgeanalysis$targetPo
 weightVars <- c("Source","Target","Weight")
 NJ.edgew <- NJ.edgeanalysis[weightVars]
 
+# Convert to weighted edge list
+NJ.edgeW <- graph.data.frame(NJ.edgew)
+
 ###########################
 #Close Database Connection#
 ###########################
