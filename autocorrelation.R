@@ -43,6 +43,10 @@ spplot(NJ, zcol="lm1", col.regions=lm.palette(20), main="Local Moran's I (|z| sc
 ## Simulated Autocorrelation#
 #############################
 
+###########
+#SET UP FOR SEI VARIABLES AND TABLE NAMES#
+###########
+
 weights <- W_cont_el_mat
 n <- length(W_cont_el)
 uncorr_x <- rnorm(n)
