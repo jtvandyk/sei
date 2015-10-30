@@ -134,6 +134,7 @@ names(NJ.edgeanalysis) <- c("ID","Source","sourcePov","Target","targetPov")
 
 # Absolute value in difference between Source and Target nodes
 NJ.edgeanalysis$Weight <- abs(NJ.edgeanalysis$sourcePov-NJ.edgeanalysis$targetPov)
+dbWriteTable(con, c("sei","NJedgeanalysis"), NJ.edgeanalysis, row.names=FALSE)
 
 # Subset edgeweight analysis table to new data frame for conversion
 weightVars <- c("Source","Target","Weight")
@@ -141,12 +142,27 @@ NJ.edgew <- NJ.edgeanalysis[weightVars]
 NJ.edgew$Weight <- 1 - NJ.edgew$Weight
 dbWriteTable(con, c("sei","NJedgew"), NJ.edgew, row.names=FALSE)
 
-# Convert to weighted edge list
-NJ.edgeW <- graph.data.frame(NJ.edgew)
+# Convert to weighted edge list and then create undirected graph with data
+el.m <- as.matrix(NJ.edgew[,1:2])
+g <- graph.edgelist(el.m, directed=FALSE)
+E(g)$weight = as.numeric(NJ.edgew[,3]) 
+plot(g,layout=layout.fruchterman.reingold,edge.width=E(g)$weight)
 
 # Convert to weighted adjacency matrix
-NJ.adjW <- get.adjacency(NJ.edgeW, attr='Weight')
+# NJ.adjW <- get.adjacency(NJ.edgeW, attr='Weight')
 
+# NJ.graph.W <- graph.adjacency(NJ.adjW, mode="undirected", weighted=TRUE)
+# NJ.graph.W <- graph.data.frame(NJ.edgew)
+
+# Node Strength for Outbound Links (even though it's a symmetrical network)
+NJ.strength <- graph.strength(g, mode="out")
+
+# Power Law Fit
+NJ.power<- fit_power_law(g)
+fit_power_law(NJ.graph.W)
+fit_power_law(NJ.edgeW)
+
+plf <- power.law.fit(NJ.strength)
 ###########################
 #Close Database Connection#
 ###########################
