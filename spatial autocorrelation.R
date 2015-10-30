@@ -75,30 +75,97 @@ plot(NJ.sp)
 #   append=TRUE    : inserts new rows
 # (default is that both are FALSE; can't have both TRUE)
 
-#Create neighbors list for SpatialPolygonsDataFrame (spdep)
+# Create neighbors list for SpatialPolygonsDataFrame (spdep)
 NJ.nb <- poly2nb(NJ.sp,  row.names= NJ.sp$dNCESID, queen = FALSE)
 
 summary(NJ.nb)
 plot(NJ.nb)
 
-#Create weights for nb class neighbors list (spdep)
+# Create weights for nb class neighbors list (spdep)
 NJ.lw <- nb2listw(NJ.nb)
 
-#Build adjacency table (spdep)
-#Transition NB list/class to NB list weights
-#Creates nb class weights list titled 'nbTemp'
+# Build adjacency table (spdep)
+# Transition NB list/class to NB list weights
+# Creates nb class weights list titled 'nbTemp'
 nbTemp <- as(nb2listw(NJ.nb, style="B", zero.policy=TRUE), "CsparseMatrix")
 
-#Build adjacency matrix table (igraph)
-#Transition NB list weights to adjacency graph
+# Build adjacency matrix table (igraph)
+# Transition NB list weights to adjacency graph
 NJ.adj <- graph.adjacency(nbTemp, mode="undirected")
 
-#Test matrix graph
+# Test matrix graph
 plot(NJ.adj)
 
-#Transform to edgelist table (igraph)
-#Create edge list with District NCES ID from adjacency graph
+# Transform to edgelist table (igraph)
+# Create edge list with District NCES ID from adjacency graph
 NJ.edge <- get.edgelist(NJ.adj, names=TRUE)
+names(NJ.edge) <- c("Source","Target")
+
+#####################
+#Create Edge Weights#
+#####################
+
+# Create data frame from edgelist
+NJ.dfedge <- data.frame(NJ.edge)
+names(NJ.dfedge) <- c("Source", "Target")
+NJ.dfedge$ID <- 1:nrow(NJ.dfedge)
+
+# Subset source and target nodes to join poverty rate data
+NJ.source <- NJ.dfedge[c(1,3)]
+NJ.target <- NJ.dfedge[c(2,3)]
+
+# Convert to data frame to join poverty rate
+# NJ.source <- data.frame(NJ.source)
+# NJ.target <- data.frame(NJ.target)
+
+# Rename columns
+# names(NJ.source) <- c("Source")
+# names(NJ.target) <- c("Target")
+
+# Subset from data table
+subsetVars <- c("dNCESID","dEstPovRate")
+NJ.pov <- NJ.data[subsetVars]
+
+# Merge poverty data with Source and Target nodes tables
+NJ.sourceData <- merge(NJ.source, NJ.pov, by.x = "Source", by.y="dNCESID")
+NJ.targetData <- merge(NJ.target, NJ.pov, by.x = "Target", by.y="dNCESID")
+NJ.edgeanalysis <- merge(NJ.sourceData, NJ.targetData, by="ID")
+names(NJ.edgeanalysis) <- c("ID","Source","sourcePov","Target","targetPov")
+
+# Absolute value in difference between Source and Target nodes
+NJ.edgeanalysis$Weight <- abs(NJ.edgeanalysis$sourcePov-NJ.edgeanalysis$targetPov)
+dbWriteTable(con, c("sei","NJedgeanalysis"), NJ.edgeanalysis, row.names=FALSE)
+
+# Subset edgeweight analysis table to new data frame for conversion
+weightVars <- c("Source","Target","Weight")
+NJ.edgew <- NJ.edgeanalysis[weightVars]
+NJ.edgew$Weight <- 1 - NJ.edgew$Weight
+dbWriteTable(con, c("sei","NJedgew"), NJ.edgew, row.names=FALSE)
+
+# Convert to weighted edge list and then create undirected graph with data
+el.m <- as.matrix(NJ.edgew[,1:2])
+g <- graph.edgelist(el.m, directed=FALSE)
+E(g)$weight = as.numeric(NJ.edgew[,3]) 
+plot(g,layout=layout.fruchterman.reingold,edge.width=E(g)$weight)
+
+# Convert to weighted adjacency matrix
+# NJ.adjW <- get.adjacency(NJ.edgeW, attr='Weight')
+
+# NJ.graph.W <- graph.adjacency(NJ.adjW, mode="undirected", weighted=TRUE)
+# NJ.graph.W <- graph.data.frame(NJ.edgew)
+
+# Node Strength for Outbound Links (even though it's a symmetrical network)
+NJ.strength <- graph.strength(g, mode="out")
+
+# Power Law Fit
+NJ.power<- fit_power_law(g)
+fit_power_law(NJ.graph.W)
+fit_power_law(NJ.edgeW)
+
+plf <- power.law.fit(NJ.strength)
+###########################
+#Close Database Connection#
+###########################
 
 # Close PostgreSQL connection 
 dbDisconnect(con)
